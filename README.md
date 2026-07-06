@@ -57,3 +57,17 @@ GET /health
 ## Next Step
 
 Step 2 will add the PostgreSQL schema for applications, analyses, and resume projects.
+
+## Seed Data
+
+Seed the resume projects table:
+
+```bash
+docker compose exec backend python -m app.scripts.seed_resume_projects
+```
+
+The seed script inserts or updates three resume projects:
+
+- Smart Farm IoT Data Pipeline
+- Distributed Graph Analytics Engine
+- C++ WebSocket Multiplayer Game Server
