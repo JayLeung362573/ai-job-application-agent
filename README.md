@@ -71,3 +71,23 @@ The seed script inserts or updates three resume projects:
 - Smart Farm IoT Data Pipeline
 - Distributed Graph Analytics Engine
 - C++ WebSocket Multiplayer Game Server
+
+## Backend Tests
+
+Apply migrations first:
+
+```bash
+docker compose exec backend alembic upgrade head
+```
+
+Run backend tests:
+
+```bash
+docker compose exec backend pytest
+```
+
+The current backend test suite covers:
+
+- ET /health
+- GET /health/db
+- GET /resume-projects
