@@ -1,0 +1,34 @@
+from fastapi import APIRouter, Depends, status
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from app.db.session import get_db
+from app.models.application import Application
+from app.schemas.application import ApplicationCreate, ApplicationRead
+
+
+router = APIRouter(prefix="/applications", tags=["applications"])
+
+
+@router.post(
+    "",
+    response_model=ApplicationRead,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_application(
+    application_data: ApplicationCreate,
+    db: Session = Depends(get_db),
+):
+    application = Application(**application_data.model_dump())
+
+    db.add(application)
+    db.commit()
+    db.refresh(application)
+
+    return application
+
+
+@router.get("", response_model=list[ApplicationRead])
+def list_applications(db: Session = Depends(get_db)):
+    statement = select(Application).order_by(Application.updated_at.desc())
+    return db.scalars(statement).all()

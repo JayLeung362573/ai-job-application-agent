@@ -51,7 +51,11 @@ http://localhost:8000/docs
 ## Current API Endpoints
 
 ```bash
-GET /health
+GET  /health
+GET  /health/db
+GET  /resume-projects
+POST /applications
+GET  /applications
 ```
 
 ## Next Step
@@ -88,6 +92,8 @@ docker compose exec backend pytest
 
 The current backend test suite covers:
 
-- ET /health
-- GET /health/db
-- GET /resume-projects
+- `GET /health`
+- `GET /health/db`
+- `GET /resume-projects`
+- `POST /applications`
+- `GET /applications`
