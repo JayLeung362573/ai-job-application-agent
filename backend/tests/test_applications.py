@@ -59,3 +59,41 @@ def test_list_applications_includes_created_application(client: TestClient) -> N
         and application["title"] == payload["title"]
         for application in applications
     )
+
+def test_get_application_by_id(client: TestClient) -> None:
+    payload = {
+        "company": "Example Systems",
+        "title": "Full Stack Intern",
+        "location": "Burnaby, BC",
+        "job_url": "https://example.com/jobs/full-stack-intern",
+        "status": "SAVED",
+        "job_description": "Full stack internship using React, TypeScript, APIs, and PostgreSQL.",
+        "notes": "Useful for frontend and backend practice.",
+    }
+
+    create_response = client.post("/applications", json=payload)
+
+    assert create_response.status_code == 201
+
+    created_application = create_response.json()
+    application_id = created_application["id"]
+
+    get_response = client.get(f"/applications/{application_id}")
+
+    assert get_response.status_code == 200
+
+    data = get_response.json()
+
+    assert data["id"] == application_id
+    assert data["company"] == payload["company"]
+    assert data["title"] == payload["title"]
+    assert data["status"] == payload["status"]
+
+
+def test_get_application_by_id_returns_404_for_missing_application(
+    client: TestClient,
+) -> None:
+    response = client.get("/applications/00000000-0000-0000-0000-000000000000")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Application not found"}

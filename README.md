@@ -56,6 +56,7 @@ GET  /health/db
 GET  /resume-projects
 POST /applications
 GET  /applications
+GET  /applications/{application_id}
 ```
 
 ## Next Step
@@ -97,3 +98,5 @@ The current backend test suite covers:
 - `GET /resume-projects`
 - `POST /applications`
 - `GET /applications`
+- `GET /applications/{application_id}`
+- missing application 404 handling
