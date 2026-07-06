@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.exc import SQLAlchemyError
 
+from app.api.routes.resume_projects import router as resume_projects_router
 from app.db.session import check_database_connection
 
 app = FastAPI(title="AI Job Application Agent API")
@@ -13,6 +14,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(resume_projects_router)
 
 
 @app.get("/health")
