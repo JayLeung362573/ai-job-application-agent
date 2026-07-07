@@ -57,6 +57,7 @@ GET  /resume-projects
 POST /applications
 GET  /applications
 GET  /applications/{application_id}
+PATCH /applications/{application_id}
 ```
 
 ## Next Step
@@ -100,3 +101,6 @@ The current backend test suite covers:
 - `GET /applications`
 - `GET /applications/{application_id}`
 - missing application 404 handling
+- `PATCH /applications/{application_id}`
+- partial update behavior
+- invalid application status validation

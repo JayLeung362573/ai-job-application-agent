@@ -97,3 +97,79 @@ def test_get_application_by_id_returns_404_for_missing_application(
 
     assert response.status_code == 404
     assert response.json() == {"detail": "Application not found"}
+
+def test_update_application_status_and_notes(client: TestClient) -> None:
+    payload = {
+        "company": "Example Cloud",
+        "title": "Backend Intern",
+        "location": "Vancouver, BC",
+        "job_url": "https://example.com/jobs/backend-intern",
+        "status": "SAVED",
+        "job_description": (
+            "Backend internship using Python, FastAPI, PostgreSQL, Docker, "
+            "and API testing."
+        ),
+        "notes": "Need to tailor resume.",
+    }
+
+    create_response = client.post("/applications", json=payload)
+    assert create_response.status_code == 201
+
+    application_id = create_response.json()["id"]
+
+    update_response = client.patch(
+        f"/applications/{application_id}",
+        json={
+            "status": "APPLIED",
+            "notes": "Applied with tailored backend resume.",
+        },
+    )
+
+    assert update_response.status_code == 200
+
+    data = update_response.json()
+
+    assert data["id"] == application_id
+    assert data["status"] == "APPLIED"
+    assert data["notes"] == "Applied with tailored backend resume."
+
+    # Fields not included in the PATCH body should remain unchanged.
+    assert data["company"] == payload["company"]
+    assert data["title"] == payload["title"]
+    assert data["job_description"] == payload["job_description"]
+
+
+def test_update_application_returns_404_for_missing_application(
+    client: TestClient,
+) -> None:
+    response = client.patch(
+        "/applications/00000000-0000-0000-0000-000000000000",
+        json={"status": "APPLIED"},
+    )
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Application not found"}
+
+
+def test_update_application_rejects_invalid_status(client: TestClient) -> None:
+    payload = {
+        "company": "Example Invalid Status",
+        "title": "Software Intern",
+        "location": "Remote",
+        "job_url": "https://example.com/jobs/software-intern",
+        "status": "SAVED",
+        "job_description": "Software internship using APIs and databases.",
+        "notes": "Testing invalid status.",
+    }
+
+    create_response = client.post("/applications", json=payload)
+    assert create_response.status_code == 201
+
+    application_id = create_response.json()["id"]
+
+    response = client.patch(
+        f"/applications/{application_id}",
+        json={"status": "NOT_A_REAL_STATUS"},
+    )
+
+    assert response.status_code == 422
