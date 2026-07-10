@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -78,3 +78,24 @@ def update_application(
     db.refresh(application)
 
     return application
+
+@router.delete(
+    "/{application_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_application(
+    application_id: uuid.UUID,
+    db: Session = Depends(get_db),
+):
+    application = db.get(Application, application_id)
+
+    if application is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Application not found",
+        )
+
+    db.delete(application)
+    db.commit()
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

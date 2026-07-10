@@ -58,6 +58,7 @@ POST /applications
 GET  /applications
 GET  /applications/{application_id}
 PATCH /applications/{application_id}
+DELETE /applications/{application_id}
 ```
 
 ## Next Step
@@ -104,3 +105,5 @@ The current backend test suite covers:
 - `PATCH /applications/{application_id}`
 - partial update behavior
 - invalid application status validation
+- `DELETE /applications/{application_id}`
+- delete confirmation through follow-up 404

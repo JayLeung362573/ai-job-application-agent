@@ -173,3 +173,38 @@ def test_update_application_rejects_invalid_status(client: TestClient) -> None:
     )
 
     assert response.status_code == 422
+
+def test_delete_application(client: TestClient) -> None:
+    payload = {
+        "company": "Example Delete Test",
+        "title": "Software Intern",
+        "location": "Vancouver, BC",
+        "job_url": "https://example.com/jobs/delete-test",
+        "status": "SAVED",
+        "job_description": "Software internship using APIs and databases.",
+        "notes": "This application will be deleted.",
+    }
+
+    create_response = client.post("/applications", json=payload)
+    assert create_response.status_code == 201
+
+    application_id = create_response.json()["id"]
+
+    delete_response = client.delete(f"/applications/{application_id}")
+    assert delete_response.status_code == 204
+    assert delete_response.content == b""
+
+    get_response = client.get(f"/applications/{application_id}")
+    assert get_response.status_code == 404
+    assert get_response.json() == {"detail": "Application not found"}
+
+
+def test_delete_application_returns_404_for_missing_application(
+    client: TestClient,
+) -> None:
+    response = client.delete(
+        "/applications/00000000-0000-0000-0000-000000000000"
+    )
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Application not found"}
