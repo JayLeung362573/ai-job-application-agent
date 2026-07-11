@@ -73,9 +73,15 @@ GET /applications?status=APPLIED
 GET /applications?status=APPLIED&q=python
 ```
 
-## Next Step
+## Frontend Routes
 
-Step 2 will add the PostgreSQL schema for applications, analyses, and resume projects.
+```text
+/                   Application dashboard
+/applications/{id}  Application detail page
+```
+
+The dashboard provides navigation to a read-only detail page showing the
+application metadata, job description, notes, and original job posting URL.
 
 ## Seed Data
 

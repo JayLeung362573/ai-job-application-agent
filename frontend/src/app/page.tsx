@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { getApplications } from "@/lib/api";
 import type {
   Application,
@@ -151,6 +153,10 @@ export default async function Home() {
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Updated
                     </th>
+
+                    <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Action
+                    </th>
                   </tr>
                 </thead>
 
@@ -185,6 +191,15 @@ export default async function Home() {
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500">
                         {formatDate(application.updated_at)}
                       </td>
+
+                      <td className="whitespace-nowrap px-6 py-4 text-right">
+                      <Link
+                        href={`/applications/${application.id}`}
+                        className="text-sm font-semibold text-blue-700 hover:text-blue-900"
+                      >
+                        View
+                      </Link>
+                    </td>
                     </tr>
                   ))}
                 </tbody>

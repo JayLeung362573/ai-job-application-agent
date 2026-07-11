@@ -18,3 +18,29 @@ export async function getApplications(): Promise<Application[]> {
 
   return (await response.json()) as Application[];
 }
+
+export async function getApplication(
+  applicationId: string,
+): Promise<Application | null> {
+  const response = await fetch(
+    `${API_URL}/applications/${encodeURIComponent(applicationId)}`,
+    {
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+      },
+    },
+  );
+
+  if (response.status === 404) {
+    return null;
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to load application: backend returned ${response.status}`,
+    );
+  }
+
+  return (await response.json()) as Application;
+}
