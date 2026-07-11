@@ -60,6 +60,18 @@ GET  /applications/{application_id}
 PATCH /applications/{application_id}
 DELETE /applications/{application_id}
 ```
+Supported query parameters:
+
+- `q`: case-insensitive search across company, title, location, job description, and notes
+- `status`: filter by `SAVED`, `APPLIED`, `INTERVIEW`, `OFFER`, or `REJECTED`
+
+Examples:
+
+```text
+GET /applications?q=python
+GET /applications?status=APPLIED
+GET /applications?status=APPLIED&q=python
+```
 
 ## Next Step
 
@@ -107,3 +119,7 @@ The current backend test suite covers:
 - invalid application status validation
 - `DELETE /applications/{application_id}`
 - delete confirmation through follow-up 404
+- application keyword search
+- application status filtering
+- combined search and status filtering
+- invalid status query validation

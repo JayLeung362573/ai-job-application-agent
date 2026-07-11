@@ -208,3 +208,125 @@ def test_delete_application_returns_404_for_missing_application(
 
     assert response.status_code == 404
     assert response.json() == {"detail": "Application not found"}
+
+def test_list_applications_filters_by_status(client: TestClient) -> None:
+    payload = {
+        "company": "Status Filter Systems",
+        "title": "Backend Engineering Intern",
+        "location": "Vancouver, BC",
+        "job_url": "https://example.com/jobs/status-filter",
+        "status": "OFFER",
+        "job_description": "Backend internship using Python and PostgreSQL.",
+        "notes": "Testing application status filtering.",
+    }
+
+    create_response = client.post("/applications", json=payload)
+    assert create_response.status_code == 201
+
+    created_application = create_response.json()
+
+    response = client.get("/applications?status=OFFER")
+
+    assert response.status_code == 200
+
+    applications = response.json()
+
+    assert len(applications) > 0
+    assert all(
+        application["status"] == "OFFER"
+        for application in applications
+    )
+    assert any(
+        application["id"] == created_application["id"]
+        for application in applications
+    )
+
+def test_list_applications_searches_case_insensitively(
+    client: TestClient,
+) -> None:
+    payload = {
+        "company": "Quantum Search Systems",
+        "title": "Platform Engineering Intern",
+        "location": "Burnaby, BC",
+        "job_url": "https://example.com/jobs/quantum-search",
+        "status": "SAVED",
+        "job_description": "Platform internship using APIs and containers.",
+        "notes": "Testing case-insensitive keyword search.",
+    }
+
+    create_response = client.post("/applications", json=payload)
+    assert create_response.status_code == 201
+
+    created_application = create_response.json()
+
+    response = client.get("/applications?q=QUANTUM")
+
+    assert response.status_code == 200
+
+    applications = response.json()
+
+    assert any(
+        application["id"] == created_application["id"]
+        for application in applications
+    )
+
+def test_list_applications_combines_search_and_status_filter(
+    client: TestClient,
+) -> None:
+    applied_payload = {
+        "company": "Vector Sentinel Applied",
+        "title": "Software Engineering Intern",
+        "location": "Remote",
+        "job_url": "https://example.com/jobs/vector-applied",
+        "status": "APPLIED",
+        "job_description": "Unique vector-sentinel platform position.",
+        "notes": "Should appear in the combined result.",
+    }
+
+    rejected_payload = {
+        "company": "Vector Sentinel Rejected",
+        "title": "Software Engineering Intern",
+        "location": "Remote",
+        "job_url": "https://example.com/jobs/vector-rejected",
+        "status": "REJECTED",
+        "job_description": "Unique vector-sentinel platform position.",
+        "notes": "Should not appear in the combined result.",
+    }
+
+    applied_response = client.post(
+        "/applications",
+        json=applied_payload,
+    )
+    rejected_response = client.post(
+        "/applications",
+        json=rejected_payload,
+    )
+
+    assert applied_response.status_code == 201
+    assert rejected_response.status_code == 201
+
+    applied_id = applied_response.json()["id"]
+    rejected_id = rejected_response.json()["id"]
+
+    response = client.get(
+        "/applications?status=APPLIED&q=vector-sentinel"
+    )
+
+    assert response.status_code == 200
+
+    application_ids = {
+        application["id"]
+        for application in response.json()
+    }
+
+    assert applied_id in application_ids
+    assert rejected_id not in application_ids
+
+def test_list_applications_rejects_invalid_status_filter(
+    client: TestClient,
+) -> None:
+    response = client.get(
+        "/applications?status=NOT_A_REAL_STATUS"
+    )
+
+    assert response.status_code == 422
