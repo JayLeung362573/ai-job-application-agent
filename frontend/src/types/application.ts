@@ -17,3 +17,13 @@ export interface Application {
   created_at: string;
   updated_at: string;
 }
+
+export interface ApplicationCreatePayload {
+  company: string;
+  title: string;
+  location: string | null;
+  job_url: string | null;
+  status: ApplicationStatus;
+  job_description: string;
+  notes: string | null;
+}

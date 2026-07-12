@@ -83,6 +83,12 @@ GET /applications?status=APPLIED&q=python
 The dashboard provides navigation to a read-only detail page showing the
 application metadata, job description, notes, and original job posting URL.
 
+```text
+/applications/new   Create application form
+```
+The create application form submits job information to the FastAPI API and
+redirects to the new application's detail page after a successful request.
+
 ## Seed Data
 
 Seed the resume projects table:
