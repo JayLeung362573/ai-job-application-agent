@@ -96,9 +96,19 @@ The edit form loads the existing application data, sends partial updates to
 the FastAPI `PATCH /applications/{application_id}` endpoint, and returns to
 the updated detail page after a successful request.
 
+```text
+/?q={keyword}&status={status}  Filtered application dashboard
+```
+Filtered application dashboard
+
+## Frontend Features
 - Delete an application through a two-step confirmation flow
 - Display API errors without leaving the detail page
 - Return to the dashboard after a successful deletion
+- Search applications by company, title, location, job description, or notes
+- Filter applications by status
+- Combine keyword search and status filtering
+- Preserve filters in the URL for refreshable and shareable dashboard views
 
 The application detail page includes a danger zone with an explicit
 confirmation step before permanently deleting a stored application.
