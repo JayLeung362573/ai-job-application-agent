@@ -303,7 +303,79 @@ export default async function Home({
             </div>
           ) : (
             <div className="overflow-x-auto">
-              {/* Existing table stays here */}
+              <table className="min-w-full divide-y divide-slate-200">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Company
+                    </th>
+
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Position
+                    </th>
+
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Status
+                    </th>
+
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Location
+                    </th>
+
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Updated
+                    </th>
+
+                    <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody className="divide-y divide-slate-100">
+                  {applications.map((application) => (
+                    <tr
+                      key={application.id}
+                      className="hover:bg-slate-50"
+                    >
+                      <td className="whitespace-nowrap px-6 py-4 font-medium text-slate-900">
+                        {application.company}
+                      </td>
+
+                      <td className="px-6 py-4 text-slate-700">
+                        {application.title}
+                      </td>
+
+                      <td className="whitespace-nowrap px-6 py-4">
+                        <span
+                          className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
+                            statusStyles[application.status]
+                          }`}
+                        >
+                          {application.status}
+                        </span>
+                      </td>
+
+                      <td className="px-6 py-4 text-slate-600">
+                        {application.location ?? "Not specified"}
+                      </td>
+
+                      <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500">
+                        {formatDate(application.updated_at)}
+                      </td>
+
+                      <td className="whitespace-nowrap px-6 py-4 text-right">
+                        <Link
+                          href={`/applications/${application.id}`}
+                          className="text-sm font-semibold text-blue-700 hover:text-blue-900"
+                        >
+                          View
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </section>
