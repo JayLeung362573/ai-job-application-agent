@@ -92,12 +92,21 @@ export default async function ApplicationDetailPage({
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-10">
       <div className="mx-auto max-w-4xl">
-        <Link
-          href="/"
-          className="text-sm font-medium text-blue-700 hover:text-blue-900"
-        >
-          ← Back to applications
-        </Link>
+        <div className="flex items-center justify-between gap-4">
+          <Link
+            href="/"
+            className="text-sm font-medium text-blue-700 hover:text-blue-900"
+          >
+            ← Back to applications
+          </Link>
+
+          <Link
+            href={`/applications/${application.id}/edit`}
+            className="inline-flex rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            Edit application
+          </Link>
+        </div>
 
         <header className="mt-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">

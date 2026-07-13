@@ -27,3 +27,6 @@ export interface ApplicationCreatePayload {
   job_description: string;
   notes: string | null;
 }
+
+export type ApplicationUpdatePayload =
+  Partial<ApplicationCreatePayload>;

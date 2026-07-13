@@ -89,6 +89,13 @@ application metadata, job description, notes, and original job posting URL.
 The create application form submits job information to the FastAPI API and
 redirects to the new application's detail page after a successful request.
 
+```text
+/applications/{id}/edit  Edit application form
+```
+The edit form loads the existing application data, sends partial updates to
+the FastAPI `PATCH /applications/{application_id}` endpoint, and returns to
+the updated detail page after a successful request.
+
 ## Seed Data
 
 Seed the resume projects table:

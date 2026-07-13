@@ -1,33 +1,45 @@
 import type {
   Application,
   ApplicationCreatePayload,
+  ApplicationUpdatePayload,
 } from "@/types/application";
 
 const PUBLIC_API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
-interface ApiErrorBody {
-  detail?: string | Array<{
-    loc?: Array<string | number>;
-    msg?: string;
-    type?: string;
-  }>;
+interface ApiValidationError {
+  loc?: Array<string | number>;
+  msg?: string;
+  type?: string;
 }
 
-function getErrorMessage(body: ApiErrorBody): string {
-  if (typeof body.detail === "string") {
-    return body.detail;
-  }
+interface ApiErrorBody {
+  detail?: string | ApiValidationError[];
+}
 
-  if (Array.isArray(body.detail)) {
-    const firstError = body.detail[0];
+async function getApiErrorMessage(
+  response: Response,
+  fallbackMessage: string,
+): Promise<string> {
+  try {
+    const body = (await response.json()) as ApiErrorBody;
 
-    if (firstError?.msg) {
-      return firstError.msg;
+    if (typeof body.detail === "string") {
+      return body.detail;
     }
+
+    if (Array.isArray(body.detail)) {
+      const firstError = body.detail[0];
+
+      if (firstError?.msg) {
+        return firstError.msg;
+      }
+    }
+  } catch {
+    // Use the fallback when the response body is not valid JSON.
   }
 
-  return "Unable to create application.";
+  return fallbackMessage;
 }
 
 export async function createApplication(
@@ -43,14 +55,38 @@ export async function createApplication(
   });
 
   if (!response.ok) {
-    let message = "Unable to create application.";
+    const message = await getApiErrorMessage(
+      response,
+      "Unable to create application.",
+    );
 
-    try {
-      const errorBody = (await response.json()) as ApiErrorBody;
-      message = getErrorMessage(errorBody);
-    } catch {
-      // Keep the fallback message when the response is not JSON.
-    }
+    throw new Error(message);
+  }
+
+  return (await response.json()) as Application;
+}
+
+export async function updateApplication(
+  applicationId: string,
+  payload: ApplicationUpdatePayload,
+): Promise<Application> {
+  const response = await fetch(
+    `${PUBLIC_API_URL}/applications/${encodeURIComponent(applicationId)}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+    },
+  );
+
+  if (!response.ok) {
+    const message = await getApiErrorMessage(
+      response,
+      "Unable to update application.",
+    );
 
     throw new Error(message);
   }
