@@ -93,3 +93,26 @@ export async function updateApplication(
 
   return (await response.json()) as Application;
 }
+
+export async function deleteApplication(
+  applicationId: string,
+): Promise<void> {
+  const response = await fetch(
+    `${PUBLIC_API_URL}/applications/${encodeURIComponent(applicationId)}`,
+    {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+      },
+    },
+  );
+
+  if (!response.ok) {
+    const message = await getApiErrorMessage(
+      response,
+      "Unable to delete application.",
+    );
+
+    throw new Error(message);
+  }
+}

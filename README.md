@@ -96,6 +96,12 @@ The edit form loads the existing application data, sends partial updates to
 the FastAPI `PATCH /applications/{application_id}` endpoint, and returns to
 the updated detail page after a successful request.
 
+- Delete an application through a two-step confirmation flow
+- Display API errors without leaving the detail page
+- Return to the dashboard after a successful deletion
+
+The application detail page includes a danger zone with an explicit
+confirmation step before permanently deleting a stored application.
 ## Seed Data
 
 Seed the resume projects table:

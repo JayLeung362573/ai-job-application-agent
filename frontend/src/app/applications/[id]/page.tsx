@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { getApplication } from "@/lib/api";
 import type { ApplicationStatus } from "@/types/application";
 
+import DeleteApplicationButton from "./delete-application-button";
+
 export const dynamic = "force-dynamic";
 
 interface ApplicationDetailPageProps {
@@ -187,6 +189,24 @@ export default async function ApplicationDetailPage({
                 No notes have been added.
               </p>
             )}
+          </section>
+
+          <section className="rounded-xl border border-red-200 bg-white p-6 shadow-sm">
+            <h2 className="text-lg font-semibold text-red-800">
+              Danger zone
+            </h2>
+
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              Permanently remove this application and its stored analysis data.
+              This operation cannot be undone.
+            </p>
+
+            <div className="mt-5">
+              <DeleteApplicationButton
+                applicationId={application.id}
+                applicationLabel={`${application.company} — ${application.title}`}
+              />
+            </div>
           </section>
         </div>
       </div>
