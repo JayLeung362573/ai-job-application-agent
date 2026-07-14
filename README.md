@@ -109,9 +109,13 @@ Filtered application dashboard
 - Filter applications by status
 - Combine keyword search and status filtering
 - Preserve filters in the URL for refreshable and shareable dashboard views
+- Display route-level error boundaries for dashboard and application pages
+- Retry failed server-side data requests without a full browser refresh
+- Keep missing applications separate from temporary backend failures
 
 The application detail page includes a danger zone with an explicit
 confirmation step before permanently deleting a stored application.
+
 ## Seed Data
 
 Seed the resume projects table:

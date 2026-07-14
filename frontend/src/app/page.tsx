@@ -86,28 +86,20 @@ export default async function Home({
 
   const hasActiveFilters = Boolean(q || selectedStatus);
 
-  let allApplications: Application[] = [];
-  let applications: Application[] = [];
-  let errorMessage: string | null = null;
+  let allApplications: Application[];
+  let applications: Application[];
 
-  try {
-    if (hasActiveFilters) {
-      [allApplications, applications] = await Promise.all([
-        getApplications(),
-        getApplications({
-          q: q || undefined,
-          status: selectedStatus,
-        }),
-      ]);
-    } else {
-      allApplications = await getApplications();
-      applications = allApplications;
-    }
-  } catch (error) {
-    errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Unable to load applications.";
+  if (hasActiveFilters) {
+    [allApplications, applications] = await Promise.all([
+      getApplications(),
+      getApplications({
+        q: q || undefined,
+        status: selectedStatus,
+      }),
+    ]);
+  } else {
+    allApplications = await getApplications();
+    applications = allApplications;
   }
 
   const summaryCards = [
@@ -185,7 +177,7 @@ export default async function Home({
                 </p>
               </div>
 
-              {!errorMessage && allApplications.length > 0 ? (
+              {allApplications.length > 0 ? (
                 <p className="text-sm text-slate-500">
                   Showing {applications.length} of {allApplications.length}
                 </p>
@@ -263,18 +255,7 @@ export default async function Home({
             </form>
           </div>
 
-          {errorMessage ? (
-            <div className="px-6 py-12 text-center">
-              <p className="font-medium text-red-700">
-                Could not load applications
-              </p>
-
-              <p className="mt-2 text-sm text-slate-500">
-                Confirm that the FastAPI backend and PostgreSQL services
-                are running.
-              </p>
-            </div>
-          ) : allApplications.length === 0 ? (
+          {allApplications.length === 0 ? (
             <div className="px-6 py-12 text-center">
               <p className="font-medium text-slate-800">
                 No applications yet

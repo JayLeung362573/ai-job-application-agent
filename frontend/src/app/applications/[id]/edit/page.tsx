@@ -18,35 +18,7 @@ export default async function EditApplicationPage({
 }: EditApplicationPageProps) {
   const { id } = await params;
 
-  let application;
-
-  try {
-    application = await getApplication(id);
-  } catch {
-    return (
-      <main className="min-h-screen bg-slate-50 px-6 py-10">
-        <div className="mx-auto max-w-3xl">
-          <Link
-            href={`/applications/${id}`}
-            className="text-sm font-medium text-blue-700 hover:text-blue-900"
-          >
-            ← Back to application
-          </Link>
-
-          <section className="mt-8 rounded-xl border border-red-200 bg-white p-8 shadow-sm">
-            <h1 className="text-xl font-semibold text-red-700">
-              Could not load application
-            </h1>
-
-            <p className="mt-2 text-sm text-slate-600">
-              Confirm that the FastAPI backend and PostgreSQL services are
-              running, then refresh this page.
-            </p>
-          </section>
-        </div>
-      </main>
-    );
-  }
+  const application = await getApplication(id);
 
   if (application === null) {
     notFound();
