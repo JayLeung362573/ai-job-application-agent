@@ -71,10 +71,22 @@ def test_analysis_service_saves_structured_result() -> None:
         assert analysis.match_score == 67
 
         assert len(analysis.matched_projects) >= 1
-        assert (
-            analysis.matched_projects[0]["project_name"]
-            == "Smart Farm IoT Data Pipeline"
-        )
+
+        matched_projects_by_name = {
+            project["project_name"]: project
+            for project in analysis.matched_projects
+        }
+
+        assert "Smart Farm IoT Data Pipeline" in matched_projects_by_name
+
+        smart_farm_match = matched_projects_by_name[
+            "Smart Farm IoT Data Pipeline"
+        ]
+
+        assert smart_farm_match["matched_skills"] == [
+            "Python",
+            "FastAPI",
+        ]
 
         saved_analysis = db.get(Analysis, analysis.id)
 

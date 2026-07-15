@@ -43,6 +43,26 @@ The analysis service coordinates the complete backend workflow:
 The provider is injected into the service, allowing deterministic tests and
 future replacement with an OpenAI-backed implementation.
 
+## Application Analysis API
+
+Generate and persist a structured analysis for an application:
+
+```bash
+curl -X POST \
+  http://localhost:8000/applications/{application_id}/analyze
+```
+
+The endpoint currently uses the deterministic mock provider and returns:
+
+- required and preferred skills
+- matched resume projects
+- missing skills
+- tailored bullet suggestions
+- interview questions
+- a match score from 0 to 100
+
+Each request creates a new analysis record in PostgreSQL.
+
 ## Structured Analysis Schema
 
 AI-generated job analyses use validated nested schemas containing:
@@ -100,6 +120,7 @@ GET  /health/db
 GET  /resume-projects
 POST /applications
 GET  /applications
+POST /applications/{application_id}/analyze
 GET  /applications/{application_id}
 PATCH /applications/{application_id}
 DELETE /applications/{application_id}

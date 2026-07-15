@@ -13,6 +13,13 @@ from app.schemas.application import (
     ApplicationUpdate,
 )
 
+from app.api.dependencies import get_analysis_service
+from app.schemas.analysis import AnalysisRead
+from app.services.analysis import (
+    AnalysisService,
+    ApplicationNotFoundError,
+)
+
 
 router = APIRouter(prefix="/applications", tags=["applications"])
 
@@ -81,6 +88,28 @@ def list_applications(
 
     return db.scalars(statement).all()
 
+@router.post(
+    "/{application_id}/analyze",
+    response_model=AnalysisRead,
+    status_code=status.HTTP_201_CREATED,
+)
+def analyze_application(
+    application_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    analysis_service: AnalysisService = Depends(
+        get_analysis_service
+    ),
+):
+    try:
+        return analysis_service.analyze_application(
+            db=db,
+            application_id=application_id,
+        )
+    except ApplicationNotFoundError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Application not found",
+        ) from exc
 
 @router.get("/{application_id}", response_model=ApplicationRead)
 def get_application(
