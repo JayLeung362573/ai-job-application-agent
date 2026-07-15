@@ -13,6 +13,22 @@ A full-stack application for tracking internship applications, storing job descr
 
 ---
 
+## Analysis Provider Architecture
+
+The analysis workflow uses a provider abstraction so that application logic
+does not depend directly on a specific AI vendor.
+
+The current deterministic mock provider:
+
+- extracts a known set of technical skills from job descriptions
+- matches those skills against stored resume projects
+- identifies missing skills
+- generates predictable interview questions and bullet suggestions
+- runs without API credentials or external network calls
+
+A production OpenAI provider can replace the mock implementation without
+changing the validated analysis response schema.
+
 ## Structured Analysis Schema
 
 AI-generated job analyses use validated nested schemas containing:
