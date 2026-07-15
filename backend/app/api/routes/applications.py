@@ -16,6 +16,7 @@ from app.schemas.application import (
 from app.api.dependencies import get_analysis_service
 from app.schemas.analysis import AnalysisRead
 from app.services.analysis import (
+    AnalysisNotFoundError,
     AnalysisService,
     ApplicationNotFoundError,
 )
@@ -109,6 +110,33 @@ def analyze_application(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Application not found",
+        ) from exc
+
+@router.get(
+    "/{application_id}/analysis",
+    response_model=AnalysisRead,
+)
+def get_latest_application_analysis(
+    application_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    analysis_service: AnalysisService = Depends(
+        get_analysis_service
+    ),
+):
+    try:
+        return analysis_service.get_latest_analysis(
+            db=db,
+            application_id=application_id,
+        )
+    except ApplicationNotFoundError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Application not found",
+        ) from exc
+    except AnalysisNotFoundError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Analysis not found",
         ) from exc
 
 @router.get("/{application_id}", response_model=ApplicationRead)

@@ -11,6 +11,7 @@ from app.models.application import Application
 from app.schemas.analysis import AnalysisResult
 from app.scripts.seed_resume_projects import seed_resume_projects
 from app.services.analysis import (
+    AnalysisNotFoundError,
     AnalysisService,
     ApplicationNotFoundError,
     MockAnalysisProvider,
@@ -160,3 +161,66 @@ def test_analysis_service_does_not_save_when_provider_fails() -> None:
 
         assert count_before == 0
         assert count_after == 0
+
+def test_analysis_service_returns_latest_analysis() -> None:
+    seed_resume_projects()
+
+    with SessionLocal() as db:
+        application = create_test_application(
+            db,
+            company="Latest Analysis Service Test",
+            job_description=(
+                "We need Python and FastAPI experience."
+            ),
+        )
+
+        service = AnalysisService(MockAnalysisProvider())
+
+        first_analysis = service.analyze_application(
+            db=db,
+            application_id=application.id,
+        )
+
+        application.job_description = (
+            "We need Python, FastAPI, and React experience."
+        )
+        db.commit()
+
+        second_analysis = service.analyze_application(
+            db=db,
+            application_id=application.id,
+        )
+
+        latest_analysis = service.get_latest_analysis(
+            db=db,
+            application_id=application.id,
+        )
+
+        assert latest_analysis.id == second_analysis.id
+        assert latest_analysis.id != first_analysis.id
+        assert latest_analysis.required_skills == [
+            "Python",
+            "FastAPI",
+            "React",
+        ]
+        assert latest_analysis.missing_skills == ["React"]
+
+
+def test_analysis_service_raises_when_analysis_missing() -> None:
+    with SessionLocal() as db:
+        application = create_test_application(
+            db,
+            company="Missing Analysis Service Test",
+            job_description="We need Python experience.",
+        )
+
+        service = AnalysisService(MockAnalysisProvider())
+
+        with pytest.raises(
+            AnalysisNotFoundError,
+            match="has no analysis",
+        ):
+            service.get_latest_analysis(
+                db=db,
+                application_id=application.id,
+            )

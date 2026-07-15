@@ -227,8 +227,8 @@ GET /resume-projects
 ### Applications
 
 ```text
-POST   /applications
-GET    /applications
+POST /applications/{application_id}/analyze
+GET  /applications/{application_id}/analysis
 GET    /applications/{application_id}
 PATCH  /applications/{application_id}
 DELETE /applications/{application_id}
@@ -248,6 +248,16 @@ Example:
 curl -X POST \
   http://localhost:8000/applications/{application_id}/analyze
 ```
+
+Retrieve the most recently created analysis:
+
+```bash
+curl \
+  http://localhost:8000/applications/{application_id}/analysis
+```
+
+The endpoint returns 404 Analysis not found when the application exists but
+has not been analyzed.
 
 ### Application Query Parameters
 
@@ -318,6 +328,8 @@ The test suite covers:
 - provider failure handling
 - application analysis API responses
 - analysis records saved in PostgreSQL
+- latest application analysis retrieval
+- applications without saved analyses
 
 Run frontend checks:
 
@@ -333,7 +345,6 @@ docker compose run --rm frontend npm run build
 - Analysis currently uses a deterministic mock provider
 - OpenAI API integration has not been added
 - The frontend does not yet display generated analysis results
-- There is not yet an endpoint for retrieving the latest saved analysis
 - Re-running analysis creates an additional database record
 
 ---

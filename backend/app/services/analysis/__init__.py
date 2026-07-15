@@ -4,6 +4,7 @@ from app.services.analysis.provider import (
     ResumeProjectContext,
 )
 from app.services.analysis.service import (
+    AnalysisNotFoundError,
     AnalysisService,
     ApplicationNotFoundError,
 )

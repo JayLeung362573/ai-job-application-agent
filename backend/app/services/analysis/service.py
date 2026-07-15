@@ -15,10 +15,46 @@ from app.services.analysis.provider import (
 class ApplicationNotFoundError(LookupError):
     """Raised when an application cannot be found for analysis."""
 
+class AnalysisNotFoundError(LookupError):
+    """Raised when an application has no saved analysis."""
 
 class AnalysisService:
     def __init__(self, provider: AnalysisProvider) -> None:
         self.provider = provider
+
+    def get_latest_analysis(
+        self,
+        *,
+        db: Session,
+        application_id: uuid.UUID,
+    ) -> Analysis:
+        application = db.get(Application, application_id)
+
+        if application is None:
+            raise ApplicationNotFoundError(
+                f"Application {application_id} was not found."
+            )
+
+        statement = (
+            select(Analysis)
+            .where(
+                Analysis.application_id == application_id
+            )
+            .order_by(
+                Analysis.created_at.desc(),
+                Analysis.id.desc(),
+            )
+            .limit(1)
+        )
+
+        analysis = db.scalar(statement)
+
+        if analysis is None:
+            raise AnalysisNotFoundError(
+                f"Application {application_id} has no analysis."
+            )
+
+        return analysis
 
     def analyze_application(
         self,
