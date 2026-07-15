@@ -4,6 +4,8 @@ import type {
   ApplicationUpdatePayload,
 } from "@/types/application";
 
+import type { Analysis } from "@/types/analysis";
+
 const PUBLIC_API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -115,4 +117,29 @@ export async function deleteApplication(
 
     throw new Error(message);
   }
+}
+
+export async function runApplicationAnalysis(
+  applicationId: string,
+): Promise<Analysis> {
+  const response = await fetch(
+    `${PUBLIC_API_URL}/applications/${encodeURIComponent(applicationId)}/analyze`,
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+    },
+  );
+
+  if (!response.ok) {
+    const message = await getApiErrorMessage(
+      response,
+      "Unable to analyze application.",
+    );
+
+    throw new Error(message);
+  }
+
+  return (await response.json()) as Analysis;
 }

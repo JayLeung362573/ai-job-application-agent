@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getApplication } from "@/lib/api";
+import {
+  getApplication,
+  getLatestApplicationAnalysis,
+} from "@/lib/api";
+
+import AnalysisSection from "./analysis-section";
+
 import type { ApplicationStatus } from "@/types/application";
 
 import DeleteApplicationButton from "./delete-application-button";
@@ -61,6 +67,7 @@ export default async function ApplicationDetailPage({
     notFound();
   }
 
+  const analysis = await getLatestApplicationAnalysis(id);
   const safeJobUrl = getSafeJobUrl(application.job_url);
 
   return (
@@ -112,6 +119,11 @@ export default async function ApplicationDetailPage({
             <p>Updated {formatDateTime(application.updated_at)}</p>
           </div>
         </header>
+
+        <AnalysisSection
+          applicationId={application.id}
+          analysis={analysis}
+        />
 
         <div className="mt-6 grid gap-6">
           <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">

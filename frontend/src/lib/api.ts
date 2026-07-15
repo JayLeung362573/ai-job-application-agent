@@ -3,6 +3,8 @@ import type {
   ApplicationStatus,
 } from "@/types/application";
 
+import type { Analysis } from "@/types/analysis";
+
 const API_URL = process.env.API_URL ?? "http://localhost:8000";
 
 export interface ApplicationFilters {
@@ -70,4 +72,30 @@ export async function getApplication(
   }
 
   return (await response.json()) as Application;
+}
+
+export async function getLatestApplicationAnalysis(
+  applicationId: string,
+): Promise<Analysis | null> {
+  const response = await fetch(
+    `${API_URL}/applications/${encodeURIComponent(applicationId)}/analysis`,
+    {
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+      },
+    },
+  );
+
+  if (response.status === 404) {
+    return null;
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to load analysis: backend returned ${response.status}`,
+    );
+  }
+
+  return (await response.json()) as Analysis;
 }

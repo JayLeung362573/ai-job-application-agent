@@ -52,6 +52,9 @@ integration.
 - Calculate a match score from 0 to 100
 - Validate structured analysis output with Pydantic
 - Persist each generated analysis in PostgreSQL
+- Run or re-run analysis from an application detail page
+- Display the latest saved analysis in the frontend
+- Show match scores, skill gaps, matched projects, resume suggestions, and interview questions
 
 The current implementation uses a deterministic mock provider. It does not
 require API credentials or make external AI requests.
@@ -288,8 +291,9 @@ GET /applications?q=python&status=APPLIED
 | `/applications/{id}` | Application detail page |
 | `/applications/{id}/edit` | Edit application form |
 
-The analysis result is currently available through the backend API. Displaying
-saved analyses in the frontend is part of the next development stage.
+The application detail page can generate a new analysis and display the latest
+saved result, including skill gaps, matched projects, resume suggestions, and
+interview questions.
 
 ---
 
@@ -344,16 +348,14 @@ docker compose run --rm frontend npm run build
 
 - Analysis currently uses a deterministic mock provider
 - OpenAI API integration has not been added
-- The frontend does not yet display generated analysis results
 - Re-running analysis creates an additional database record
 
 ---
 
 ## Planned Development
 
-1. Retrieve the latest analysis for an application
-2. Display analysis results on the application detail page
-3. Add an OpenAI-backed analysis provider
-4. Select the active provider through configuration
-5. Add provider failure and timeout handling
-6. Expand automated frontend and end-to-end tests
+1. Add an OpenAI-backed analysis provider
+2. Select the active provider through configuration
+3. Add provider failure and timeout handling
+4. Improve prompt quality and analysis evaluation
+5. Expand automated frontend and end-to-end tests
