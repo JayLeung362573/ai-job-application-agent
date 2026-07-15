@@ -29,6 +29,20 @@ The current deterministic mock provider:
 A production OpenAI provider can replace the mock implementation without
 changing the validated analysis response schema.
 
+## Analysis Service
+
+The analysis service coordinates the complete backend workflow:
+
+1. Load an application and its job description from PostgreSQL.
+2. Load stored resume projects.
+3. Convert ORM models into provider-independent project context objects.
+4. Run the configured analysis provider.
+5. Validate and serialize the structured result.
+6. Store the analysis result in PostgreSQL.
+
+The provider is injected into the service, allowing deterministic tests and
+future replacement with an OpenAI-backed implementation.
+
 ## Structured Analysis Schema
 
 AI-generated job analyses use validated nested schemas containing:
