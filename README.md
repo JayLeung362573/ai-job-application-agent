@@ -13,6 +13,20 @@ A full-stack application for tracking internship applications, storing job descr
 
 ---
 
+## Structured Analysis Schema
+
+AI-generated job analyses use validated nested schemas containing:
+
+- required and preferred skills
+- role responsibilities
+- matched resume projects
+- missing skills
+- tailored resume bullet suggestions
+- interview questions
+- a match score from 0 to 100
+
+The schema is validated before analysis results are stored in PostgreSQL.
+
 ## Tech Stack
 
 | Layer | Technology |
