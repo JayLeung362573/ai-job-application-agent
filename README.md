@@ -100,6 +100,18 @@ OpenAI-backed provider without changing the API response schema.
 
 ---
 
+## OpenAI Provider
+
+The backend includes an `OpenAIAnalysisProvider` that uses the OpenAI Python SDK
+and the Responses API structured-output parsing flow.
+
+The provider is implemented but is not the default runtime provider yet. The
+application still uses the deterministic mock provider unless the dependency
+configuration is changed in a later step.
+
+This allows the full project to keep working locally and in tests without an
+API key.
+
 ## Structured Analysis Output
 
 Each analysis contains:
@@ -354,8 +366,8 @@ docker compose run --rm frontend npm run build
 
 ## Planned Development
 
-1. Add an OpenAI-backed analysis provider
-2. Select the active provider through configuration
+1. Select the active analysis provider through configuration
+2. Add OpenAI API key and model environment variables
 3. Add provider failure and timeout handling
 4. Improve prompt quality and analysis evaluation
 5. Expand automated frontend and end-to-end tests
