@@ -14,6 +14,12 @@ from app.services.analysis.service import (
     ApplicationNotFoundError,
 )
 
+from app.services.analysis.evaluator import (
+    AnalysisEvaluationIssue,
+    AnalysisEvaluationReport,
+    evaluate_analysis_result,
+)
+
 __all__ = [
     "AnalysisNotFoundError",
     "AnalysisProvider",
@@ -24,4 +30,7 @@ __all__ = [
     "OpenAIAnalysisProvider",
     "OpenAIAnalysisProviderError",
     "ResumeProjectContext",
+    "AnalysisEvaluationIssue",
+    "AnalysisEvaluationReport",
+    "evaluate_analysis_result",
 ]

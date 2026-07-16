@@ -160,6 +160,23 @@ with HTTP status 503 Service Unavailable.
 This keeps provider-specific failures separate from application-level errors
 such as missing applications or missing saved analyses.
 
+## Analysis Evaluation
+
+The backend includes lightweight evaluation helpers for checking generated
+analysis quality.
+
+The evaluator checks whether:
+
+- matched projects exist in the stored resume project list
+- matched skills are supported by project tech stacks or project descriptions
+- covered skills are not incorrectly marked as missing
+- suggested bullets reference real projects
+- matched analyses include interview questions
+- unusually short or weak suggestions are surfaced as warnings
+
+This evaluation layer is provider-independent, so it can be used with both the
+deterministic mock provider and the OpenAI-backed provider.
+
 ## Structured Analysis Output
 
 Each analysis contains:
@@ -396,6 +413,9 @@ The test suite covers:
 - applications without saved analyses
 - provider configuration validation
 - provider failure HTTP handling
+- analysis grounding evaluation
+- unsupported matched skill detection
+- missing skill consistency checks
 
 Run frontend checks:
 
@@ -416,5 +436,5 @@ docker compose run --rm frontend npm run build
 
 ## Planned Development
 
-1. Improve prompt quality and analysis evaluation
+1. Add optional manual OpenAI result evaluation workflow
 2. Expand automated frontend and end-to-end tests

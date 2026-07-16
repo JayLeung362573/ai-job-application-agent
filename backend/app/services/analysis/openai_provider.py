@@ -30,6 +30,15 @@ Rules:
 - Suggested bullets should be resume-ready and action-oriented.
 - Interview questions should be specific to the matched projects.
 - The match score must be an integer from 0 to 100.
+- matched_projects must reference only provided project names.
+- matched_skills must be supported by the selected project's tech stack,
+  description, or resume bullets.
+- missing_skills should contain job requirements that are not supported by
+  any provided resume project.
+- suggested_bullets must stay truthful to the selected project's actual
+  implementation details.
+- interview_questions should help the candidate explain specific matched
+  projects.
 """.strip()
 
     def __init__(
