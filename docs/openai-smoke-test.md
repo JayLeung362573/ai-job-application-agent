@@ -198,6 +198,29 @@ Check backend logs for details:
 docker compose logs backend
 ```
 
+## Evaluate the generated analysis
+
+After creating a real OpenAI-backed analysis, run the evaluation script:
+
+```bash
+docker compose exec backend python -m app.scripts.evaluate_latest_analysis PASTE_APPLICATION_ID_HERE
+```
+
+A clean result looks like:
+
+```text
+Analysis evaluation: PASSED
+Issues: 0
+Warnings: 0
+```
+
+A failed result means the analysis was saved successfully, but the generated
+content may need review. For example, the evaluator can detect invented project
+names, unsupported matched skills, or skills incorrectly marked as missing.
+
+Warnings do not fail the analysis, but they identify weaker output such as very
+short suggested bullets.
+
 ## 9. Return to the default mock provider
 
 After the smoke test, edit `.env`:

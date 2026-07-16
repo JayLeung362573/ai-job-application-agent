@@ -177,6 +177,18 @@ The evaluator checks whether:
 This evaluation layer is provider-independent, so it can be used with both the
 deterministic mock provider and the OpenAI-backed provider.
 
+To evaluate the latest saved analysis for an application:
+
+```bash
+docker compose exec backend python -m app.scripts.evaluate_latest_analysis APPLICATION_ID
+```
+
+The command exits with:
+
+- 0 when the analysis passes evaluation
+- 1 when evaluation issues are found
+- 2 when the application ID is invalid, missing, or has no saved analysis
+
 ## Structured Analysis Output
 
 Each analysis contains:
@@ -416,6 +428,8 @@ The test suite covers:
 - analysis grounding evaluation
 - unsupported matched skill detection
 - missing skill consistency checks
+- saved analysis evaluation script
+- evaluation CLI formatting and exit behavior
 
 Run frontend checks:
 
@@ -436,5 +450,5 @@ docker compose run --rm frontend npm run build
 
 ## Planned Development
 
-1. Add optional manual OpenAI result evaluation workflow
-2. Expand automated frontend and end-to-end tests
+1. Expand automated frontend and end-to-end tests
+2. Add deployment notes for production-style environment variables
