@@ -142,6 +142,23 @@ docs/openai-smoke-test.md
 
 Do not commit real API keys. Keep secrets in local environment variables only.
 
+## Deployment Notes
+
+Production-style deployment guidance is documented in:
+
+```text
+docs/deployment-notes.md
+```
+
+The repository also includes:
+
+```text
+.env.production.example
+```
+
+for documenting production environment variable names without committing real
+secrets.
+
 ## Provider Failure Handling
 
 Analysis provider failures are converted into stable API responses.
@@ -451,4 +468,4 @@ docker compose run --rm frontend npm run build
 ## Planned Development
 
 1. Expand automated frontend and end-to-end tests
-2. Add deployment notes for production-style environment variables
+2. Add CI coverage for frontend build checks
