@@ -4,7 +4,11 @@ from typing import Any
 import pytest
 
 from app.schemas.analysis import AnalysisResult
-from app.services.analysis import ResumeProjectContext
+from app.services.analysis import (
+    AnalysisProviderError,
+    ResumeProjectContext,
+)
+
 from app.services.analysis.openai_provider import (
     OpenAIAnalysisProvider,
     OpenAIAnalysisProviderError,
@@ -158,3 +162,9 @@ def test_openai_provider_rejects_unparsed_response() -> None:
             job_description="Python backend role.",
             resume_projects=PROJECTS,
         )
+
+def test_openai_provider_error_is_provider_error() -> None:
+    assert issubclass(
+        OpenAIAnalysisProviderError,
+        AnalysisProviderError,
+    )

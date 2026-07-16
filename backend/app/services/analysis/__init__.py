@@ -5,6 +5,7 @@ from app.services.analysis.openai_provider import (
 )
 from app.services.analysis.provider import (
     AnalysisProvider,
+    AnalysisProviderError,
     ResumeProjectContext,
 )
 from app.services.analysis.service import (
@@ -16,6 +17,7 @@ from app.services.analysis.service import (
 __all__ = [
     "AnalysisNotFoundError",
     "AnalysisProvider",
+    "AnalysisProviderError",
     "AnalysisService",
     "ApplicationNotFoundError",
     "MockAnalysisProvider",

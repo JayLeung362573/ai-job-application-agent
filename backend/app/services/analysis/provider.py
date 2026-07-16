@@ -4,6 +4,9 @@ from typing import Protocol
 
 from app.schemas.analysis import AnalysisResult
 
+class AnalysisProviderError(RuntimeError):
+    """Raised when an analysis provider cannot complete a request."""
+
 
 @dataclass(frozen=True, slots=True)
 class ResumeProjectContext:

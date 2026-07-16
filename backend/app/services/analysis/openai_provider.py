@@ -5,10 +5,12 @@ from typing import Any
 from openai import APIError, OpenAI
 
 from app.schemas.analysis import AnalysisResult
-from app.services.analysis.provider import ResumeProjectContext
+from app.services.analysis.provider import (
+    AnalysisProviderError,
+    ResumeProjectContext,
+)
 
-
-class OpenAIAnalysisProviderError(RuntimeError):
+class OpenAIAnalysisProviderError(AnalysisProviderError):
     """Raised when the OpenAI provider cannot return a valid analysis."""
 
 

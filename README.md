@@ -132,6 +132,25 @@ ANALYSIS_PROVIDER=openai \
 OPENAI_MODEL=test-model \
 OPENAI_API_KEY=test-key \
 docker compose up --build
+```
+
+## Provider Failure Handling
+
+Analysis provider failures are converted into stable API responses.
+
+When the active provider cannot complete an analysis request, the backend
+returns:
+
+```json
+{
+  "detail": "Analysis provider unavailable"
+}
+```
+
+with HTTP status 503 Service Unavailable.
+
+This keeps provider-specific failures separate from application-level errors
+such as missing applications or missing saved analyses.
 
 ## Structured Analysis Output
 
@@ -367,6 +386,8 @@ The test suite covers:
 - analysis records saved in PostgreSQL
 - latest application analysis retrieval
 - applications without saved analyses
+- provider configuration validation
+- provider failure HTTP handling
 
 Run frontend checks:
 
@@ -387,7 +408,6 @@ docker compose run --rm frontend npm run build
 
 ## Planned Development
 
-1. Add provider failure and timeout handling
-2. Improve prompt quality and analysis evaluation
-3. Add optional manual OpenAI smoke-test instructions
-4. Expand automated frontend and end-to-end tests
+1. Improve prompt quality and analysis evaluation
+2. Add optional manual OpenAI smoke-test instructions
+3. Expand automated frontend and end-to-end tests

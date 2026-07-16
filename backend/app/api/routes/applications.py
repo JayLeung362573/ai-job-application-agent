@@ -17,6 +17,7 @@ from app.api.dependencies import get_analysis_service
 from app.schemas.analysis import AnalysisRead
 from app.services.analysis import (
     AnalysisNotFoundError,
+    AnalysisProviderError,
     AnalysisService,
     ApplicationNotFoundError,
 )
@@ -94,6 +95,7 @@ def list_applications(
     response_model=AnalysisRead,
     status_code=status.HTTP_201_CREATED,
 )
+
 def analyze_application(
     application_id: uuid.UUID,
     db: Session = Depends(get_db),
@@ -110,6 +112,11 @@ def analyze_application(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Application not found",
+        ) from exc
+    except AnalysisProviderError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Analysis provider unavailable",
         ) from exc
 
 @router.get(

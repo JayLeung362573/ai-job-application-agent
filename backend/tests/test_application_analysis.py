@@ -8,6 +8,16 @@ from app.scripts.seed_resume_projects import (
     seed_resume_projects,
 )
 
+from collections.abc import Sequence
+
+from app.api.dependencies import get_analysis_service
+from app.main import app
+from app.schemas.analysis import AnalysisResult
+from app.services.analysis import (
+    AnalysisProviderError,
+    AnalysisService,
+    ResumeProjectContext,
+)
 
 def test_analyze_application_creates_saved_analysis(
     client: TestClient,
@@ -221,4 +231,52 @@ def test_get_latest_analysis_returns_404_for_missing_application(
     assert response.status_code == 404
     assert response.json() == {
         "detail": "Application not found",
+    }
+
+class FailingRouteAnalysisProvider:
+    def analyze(
+        self,
+        *,
+        job_description: str,
+        resume_projects: Sequence[ResumeProjectContext],
+    ) -> AnalysisResult:
+        raise AnalysisProviderError(
+            "Provider failed intentionally."
+        )
+
+
+def override_failing_analysis_service() -> AnalysisService:
+    return AnalysisService(
+        provider=FailingRouteAnalysisProvider(),
+    )
+
+
+def test_analyze_application_returns_503_when_provider_fails(
+    client: TestClient,
+) -> None:
+    seed_resume_projects()
+
+    application_id = create_application_for_analysis(
+        client,
+        company="Provider Failure API Test",
+        job_description="We need Python and FastAPI experience.",
+    )
+
+    app.dependency_overrides[get_analysis_service] = (
+        override_failing_analysis_service
+    )
+
+    try:
+        response = client.post(
+            f"/applications/{application_id}/analyze"
+        )
+    finally:
+        app.dependency_overrides.pop(
+            get_analysis_service,
+            None,
+        )
+
+    assert response.status_code == 503
+    assert response.json() == {
+        "detail": "Analysis provider unavailable",
     }

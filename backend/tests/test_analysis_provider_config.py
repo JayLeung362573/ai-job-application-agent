@@ -8,6 +8,7 @@ from app.services.analysis import (
     OpenAIAnalysisProvider,
 )
 
+from fastapi import HTTPException
 
 @pytest.fixture(autouse=True)
 def clear_settings_cache():
@@ -73,3 +74,29 @@ def test_dependency_can_select_openai_provider(monkeypatch) -> None:
 
     assert isinstance(service.provider, OpenAIAnalysisProvider)
     assert service.provider.model == "test-model"
+
+def test_dependency_rejects_openai_provider_without_api_key(
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv("ANALYSIS_PROVIDER", "openai")
+    monkeypatch.setenv("OPENAI_MODEL", "test-model")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+    with pytest.raises(HTTPException) as exc_info:
+        get_analysis_service()
+
+    assert exc_info.value.status_code == 503
+    assert exc_info.value.detail == "Analysis provider unavailable"
+
+def test_dependency_rejects_openai_provider_with_blank_api_key(
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv("ANALYSIS_PROVIDER", "openai")
+    monkeypatch.setenv("OPENAI_MODEL", "test-model")
+    monkeypatch.setenv("OPENAI_API_KEY", "   ")
+
+    with pytest.raises(HTTPException) as exc_info:
+        get_analysis_service()
+
+    assert exc_info.value.status_code == 503
+    assert exc_info.value.detail == "Analysis provider unavailable"
