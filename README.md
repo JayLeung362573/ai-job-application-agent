@@ -134,6 +134,14 @@ OPENAI_API_KEY=test-key \
 docker compose up --build
 ```
 
+For a real manual OpenAI provider test, follow:
+
+```text
+docs/openai-smoke-test.md
+```
+
+Do not commit real API keys. Keep secrets in local environment variables only.
+
 ## Provider Failure Handling
 
 Analysis provider failures are converted into stable API responses.
@@ -409,5 +417,4 @@ docker compose run --rm frontend npm run build
 ## Planned Development
 
 1. Improve prompt quality and analysis evaluation
-2. Add optional manual OpenAI smoke-test instructions
-3. Expand automated frontend and end-to-end tests
+2. Expand automated frontend and end-to-end tests
