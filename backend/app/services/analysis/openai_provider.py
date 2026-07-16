@@ -35,8 +35,14 @@ Rules:
         *,
         client: Any | None = None,
         model: str = "gpt-5.5",
+        api_key: str | None = None,
     ) -> None:
-        self.client = client or OpenAI()
+        client_kwargs: dict[str, str] = {}
+
+        if api_key is not None:
+            client_kwargs["api_key"] = api_key
+
+        self.client = client or OpenAI(**client_kwargs)
         self.model = model
 
     def analyze(

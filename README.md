@@ -112,6 +112,27 @@ configuration is changed in a later step.
 This allows the full project to keep working locally and in tests without an
 API key.
 
+## Provider Configuration
+
+The analysis provider is selected through environment variables.
+
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `ANALYSIS_PROVIDER` | `mock` | Selects `mock` or `openai` |
+| `OPENAI_MODEL` | `gpt-5.5` | Model name passed to the OpenAI provider |
+| `OPENAI_API_KEY` | empty | API key used only when `ANALYSIS_PROVIDER=openai` |
+
+The default provider is `mock`, so the application works locally without API
+credentials.
+
+To test provider selection without making an API call:
+
+```bash
+ANALYSIS_PROVIDER=openai \
+OPENAI_MODEL=test-model \
+OPENAI_API_KEY=test-key \
+docker compose up --build
+
 ## Structured Analysis Output
 
 Each analysis contains:
@@ -358,7 +379,7 @@ docker compose run --rm frontend npm run build
 
 ## Current Limitations
 
-- Analysis currently uses a deterministic mock provider
+- The default provider is still the deterministic mock provider
 - OpenAI API integration has not been added
 - Re-running analysis creates an additional database record
 
@@ -366,8 +387,7 @@ docker compose run --rm frontend npm run build
 
 ## Planned Development
 
-1. Select the active analysis provider through configuration
-2. Add OpenAI API key and model environment variables
-3. Add provider failure and timeout handling
-4. Improve prompt quality and analysis evaluation
-5. Expand automated frontend and end-to-end tests
+1. Add provider failure and timeout handling
+2. Improve prompt quality and analysis evaluation
+3. Add optional manual OpenAI smoke-test instructions
+4. Expand automated frontend and end-to-end tests
