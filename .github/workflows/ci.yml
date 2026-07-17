@@ -41,6 +41,10 @@ jobs:
       - name: Run frontend build
         run: docker compose run --rm frontend npm run build
 
+      - name: Install frontend dependencies for e2e
+        working-directory: frontend
+        run: npm ci
+
       - name: Install Playwright Chromium
         working-directory: frontend
         run: npx playwright install --with-deps chromium
