@@ -41,11 +41,13 @@ jobs:
       - name: Run frontend build
         run: docker compose run --rm frontend npm run build
 
-      - name: Install frontend dependencies for e2e
+      - name: Clean frontend artifacts before e2e
         run: |
           sudo rm -rf frontend/node_modules
-          cd frontend
-          npm ci
+          sudo rm -rf frontend/.next
+          sudo rm -rf frontend/test-results
+          sudo rm -rf frontend/playwright-report
+          sudo rm -rf frontend/blob-report
 
       - name: Install Playwright Chromium
         working-directory: frontend
