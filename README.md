@@ -1,11 +1,24 @@
 # AI Job Application Tracker & Resume Match Agent
 
-A full-stack application for tracking internship applications and analyzing
-job descriptions against stored resume projects.
+A full-stack internship application tracker that stores job applications,
+analyzes job descriptions against resume projects, and generates structured
+resume-match results.
 
 The project combines a Next.js frontend, FastAPI backend, PostgreSQL database,
-and a provider-based analysis architecture designed for future OpenAI
-integration.
+provider-based analysis architecture, OpenAI-ready structured output support,
+Docker Compose development, and GitHub Actions CI.
+
+## Project Highlights
+
+- Full-stack application dashboard built with Next.js, React, TypeScript, and Tailwind CSS
+- FastAPI backend with PostgreSQL persistence, SQLAlchemy models, and Alembic migrations
+- Application CRUD workflow with search, status filtering, detail pages, editing, and deletion
+- Provider-based analysis architecture with deterministic mock and OpenAI-backed providers
+- Structured analysis output validated with Pydantic
+- Saved analysis history with latest-analysis retrieval
+- Provider-independent evaluation helpers for checking generated analysis quality
+- Docker Compose local development environment
+- GitHub Actions CI for backend tests, frontend lint/build, and Playwright smoke tests
 
 ## Current Features
 
@@ -77,7 +90,7 @@ FastAPI Application
                  +--> AnalysisProvider interface
                  |        |
                  |        +--> MockAnalysisProvider
-                 |        +--> OpenAI provider (planned)
+                 |        +--> OpenAIAnalysisProvider
                  |
                  +--> PostgreSQL
 ```
@@ -103,14 +116,28 @@ OpenAI-backed provider without changing the API response schema.
 ## OpenAI Provider
 
 The backend includes an `OpenAIAnalysisProvider` that uses the OpenAI Python SDK
-and the Responses API structured-output parsing flow.
+and structured output parsing.
 
-The provider is implemented but is not the default runtime provider yet. The
-application still uses the deterministic mock provider unless the dependency
-configuration is changed in a later step.
+The provider is implemented, but the default runtime provider remains the
+deterministic mock provider so the application can run locally, in tests, and in
+CI without external credentials.
 
-This allows the full project to keep working locally and in tests without an
-API key.
+Provider selection is controlled through environment variables:
+
+```
+ANALYSIS_PROVIDER=mock
+```
+
+or
+
+```
+ANALYSIS_PROVIDER=openai
+OPENAI_MODEL=gpt-5.5
+OPENAI_API_KEY=your_secret_key
+```
+
+The OpenAI provider is intentionally kept behind configuration so API keys are
+never required for normal development or automated tests.
 
 ## Provider Configuration
 
@@ -122,8 +149,9 @@ The analysis provider is selected through environment variables.
 | `OPENAI_MODEL` | `gpt-5.5` | Model name passed to the OpenAI provider |
 | `OPENAI_API_KEY` | empty | API key used only when `ANALYSIS_PROVIDER=openai` |
 
-The default provider is `mock`, so the application works locally without API
-credentials.
+The default provider is `mock`, so the application works locally, in tests, and
+in CI without API credentials. Selecting `openai` requires a server-side
+`OPENAI_API_KEY`.
 
 To test provider selection without making an API call:
 
@@ -219,15 +247,13 @@ Each analysis contains:
 - interview questions
 - a match score from 0 to 100
 
-Example response structure:
+
+<details>
+<summary>Example structured analysis response</summary>
 
 ```json
 {
-  "required_skills": [
-    "Python",
-    "FastAPI",
-    "React"
-  ],
+  "required_skills": ["Python", "FastAPI", "React"],
   "preferred_skills": [],
   "responsibilities": [
     "Build and maintain software aligned with the job requirements."
@@ -235,16 +261,11 @@ Example response structure:
   "matched_projects": [
     {
       "project_name": "Smart Farm IoT Data Pipeline",
-      "matched_skills": [
-        "Python",
-        "FastAPI"
-      ],
+      "matched_skills": ["Python", "FastAPI"],
       "reason": "The project demonstrates relevant backend experience."
     }
   ],
-  "missing_skills": [
-    "React"
-  ],
+  "missing_skills": ["React"],
   "suggested_bullets": [
     {
       "project_name": "Smart Farm IoT Data Pipeline",
@@ -261,6 +282,7 @@ Example response structure:
   "created_at": "2026-01-01T00:00:00Z"
 }
 ```
+</details> ```
 
 ---
 
@@ -271,8 +293,9 @@ Example response structure:
 | Frontend | Next.js, React, TypeScript, Tailwind CSS |
 | Backend | Python, FastAPI, Pydantic |
 | Database | PostgreSQL, SQLAlchemy, Alembic |
-| Testing | Pytest, FastAPI TestClient |
-| Infrastructure | Docker, Docker Compose |
+| Analysis | Provider interface, deterministic mock provider, OpenAI SDK provider, structured outputs |
+| Testing | Pytest, FastAPI TestClient, Playwright |
+| Infrastructure | Docker, Docker Compose, GitHub Actions |
 
 ---
 
@@ -489,13 +512,15 @@ Workflow file:
 
 ## Current Limitations
 
-- The default provider is still the deterministic mock provider
-- OpenAI API integration has not been added
+- The default runtime provider is the deterministic mock provider
+- The OpenAI provider requires manual environment configuration
 - Re-running analysis creates an additional database record
+- End-to-end tests currently focus on stable frontend smoke coverage rather than the full analysis workflow
 
 ---
 
 ## Planned Development
 
-1. Add end-to-end analysis workflow coverage
+1. Add stable end-to-end analysis workflow coverage
 2. Add production deployment workflow examples
+3. Add deployed demo screenshots or short walkthrough media
