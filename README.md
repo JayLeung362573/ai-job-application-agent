@@ -1,3 +1,15 @@
+## Screenshots
+
+### Application Dashboard
+
+![Application dashboard](docs/screenshots/dashboard.png)
+
+### Resume Match Analysis
+
+![Resume match analysis](docs/screenshots/analysis-detail-1.png)
+![Resume match analysis](docs/screenshots/analysis-detail-2.png)
+
+
 # AI Job Application Tracker & Resume Match Agent
 
 A full-stack internship application tracker that stores job applications,
