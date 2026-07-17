@@ -455,6 +455,26 @@ docker compose exec frontend npm run lint
 docker compose run --rm frontend npm run build
 ```
 
+
+加入：
+
+### Continuous Integration
+
+GitHub Actions runs the same Docker Compose checks on pushes to `master` and on
+pull requests:
+
+- build Docker images
+- apply backend migrations
+- run backend tests
+- run frontend lint
+- run frontend build
+
+Workflow file:
+
+```text
+.github/workflows/ci.yml
+```
+
 ---
 
 ## Current Limitations
@@ -468,4 +488,4 @@ docker compose run --rm frontend npm run build
 ## Planned Development
 
 1. Expand automated frontend and end-to-end tests
-2. Add CI coverage for frontend build checks
+2. Add production deployment workflow examples

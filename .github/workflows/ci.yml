@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  docker-compose-checks:
+    name: Docker Compose Checks
+    runs-on: ubuntu-latest
+
+    env:
+      ANALYSIS_PROVIDER: mock
+      OPENAI_MODEL: gpt-5.5
+      OPENAI_API_KEY: ""
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker images
+        run: docker compose build
+
+      - name: Start PostgreSQL
+        run: docker compose up -d postgres
+
+      - name: Apply backend migrations
+        run: docker compose run --rm backend alembic upgrade head
+
+      - name: Run backend tests
+        run: docker compose run --rm backend pytest
+
+      - name: Run frontend lint
+        run: docker compose run --rm frontend npm run lint
+
+      - name: Run frontend build
+        run: docker compose run --rm frontend npm run build
+
+      - name: Show service logs on failure
+        if: failure()
+        run: docker compose logs
+
+      - name: Shut down services
+        if: always()
+        run: docker compose down -v
