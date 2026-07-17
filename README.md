@@ -447,16 +447,23 @@ The test suite covers:
 - missing skill consistency checks
 - saved analysis evaluation script
 - evaluation CLI formatting and exit behavior
+- frontend dashboard smoke tests
+- frontend application form smoke tests
 
-Run frontend checks:
+Run frontend end-to-end smoke tests:
 
 ```bash
-docker compose exec frontend npm run lint
-docker compose run --rm frontend npm run build
+cd frontend
+API_URL=http://127.0.0.1:8000 \
+NEXT_PUBLIC_API_URL=http://127.0.0.1:8000 \
+npm run test:e2e
 ```
+The Playwright smoke tests cover:
 
-
-加入：
+- dashboard rendering
+- dashboard filter URL behavior
+- new application form rendering
+- browser-side required-field validation
 
 ### Continuous Integration
 
@@ -487,5 +494,6 @@ Workflow file:
 
 ## Planned Development
 
-1. Expand automated frontend and end-to-end tests
-2. Add production deployment workflow examples
+1. Add Playwright tests to GitHub Actions CI
+2. Add end-to-end analysis workflow coverage
+3. Add production deployment workflow examples
