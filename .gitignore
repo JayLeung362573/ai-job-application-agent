@@ -25,3 +25,8 @@ venv/
 
 # Docker / local
 docker-data/
+
+# Playwright test artifacts
+frontend/test-results/
+frontend/playwright-report/
+frontend/blob-report/

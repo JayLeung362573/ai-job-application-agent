@@ -449,6 +449,7 @@ The test suite covers:
 - evaluation CLI formatting and exit behavior
 - frontend dashboard smoke tests
 - frontend application form smoke tests
+- CI Playwright smoke test execution
 
 Run frontend end-to-end smoke tests:
 
@@ -475,6 +476,8 @@ pull requests:
 - run backend tests
 - run frontend lint
 - run frontend build
+- install Playwright Chromium
+- run frontend e2e smoke tests
 
 Workflow file:
 
@@ -494,6 +497,5 @@ Workflow file:
 
 ## Planned Development
 
-1. Add Playwright tests to GitHub Actions CI
-2. Add end-to-end analysis workflow coverage
-3. Add production deployment workflow examples
+1. Add end-to-end analysis workflow coverage
+2. Add production deployment workflow examples

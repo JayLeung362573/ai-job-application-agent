@@ -29,6 +29,9 @@ jobs:
       - name: Apply backend migrations
         run: docker compose run --rm backend alembic upgrade head
 
+      - name: Start backend
+        run: docker compose up -d backend
+
       - name: Run backend tests
         run: docker compose run --rm backend pytest
 
@@ -37,6 +40,17 @@ jobs:
 
       - name: Run frontend build
         run: docker compose run --rm frontend npm run build
+
+      - name: Install Playwright Chromium
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+
+      - name: Run frontend e2e smoke tests
+        working-directory: frontend
+        env:
+          API_URL: http://127.0.0.1:8000
+          NEXT_PUBLIC_API_URL: http://127.0.0.1:8000
+        run: npm run test:e2e
 
       - name: Show service logs on failure
         if: failure()
