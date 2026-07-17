@@ -41,13 +41,14 @@ jobs:
       - name: Run frontend build
         run: docker compose run --rm frontend npm run build
 
-      - name: Clean frontend artifacts before e2e
+      - name: Prepare frontend workspace before e2e
         run: |
-          sudo rm -rf frontend/node_modules
-          sudo rm -rf frontend/.next
-          sudo rm -rf frontend/test-results
-          sudo rm -rf frontend/playwright-report
-          sudo rm -rf frontend/blob-report
+          sudo chown -R "$USER":"$(id -gn)" frontend
+          rm -rf frontend/node_modules
+          rm -rf frontend/.next
+          rm -rf frontend/test-results
+          rm -rf frontend/playwright-report
+          rm -rf frontend/blob-report
 
       - name: Install frontend dependencies for e2e
         working-directory: frontend
