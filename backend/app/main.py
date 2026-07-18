@@ -5,12 +5,13 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.api.routes.applications import router as applications_router
 from app.api.routes.resume_projects import router as resume_projects_router
 from app.db.session import check_database_connection
+from app.core.config import settings
 
 app = FastAPI(title="AI Job Application Agent API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=settings.cors_origin_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
