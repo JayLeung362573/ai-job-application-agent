@@ -1,3 +1,40 @@
+# AI Job Application Tracker & Resume Match Agent
+
+A deployed full-stack internship application tracker that stores job
+applications, analyzes job descriptions against resume projects, and generates
+structured resume-match results.
+
+The project combines a Next.js frontend, FastAPI backend, PostgreSQL database,
+provider-based analysis architecture, OpenAI-ready structured output support,
+Docker Compose development, and GitHub Actions CI.
+
+## Live Demo
+
+- [Application Tracker](https://ai-job-application-tracker-alpha.vercel.app)
+- [FastAPI Documentation](https://ai-job-application-agent-api.vercel.app/docs)
+- [Backend Health Check](https://ai-job-application-agent-api.vercel.app/health)
+
+The public deployment uses the deterministic mock analysis provider and does not
+make paid OpenAI API requests.
+
+> [!WARNING]
+> The public demo does not currently include authentication or per-user data
+> isolation. All application records are shared. Do not enter personal,
+> confidential, or real job-application information.
+
+## Production Deployment
+
+| Component | Platform |
+| :--- | :--- |
+| Frontend | Vercel, Next.js |
+| Backend | Vercel Python Functions, FastAPI |
+| Database | Neon PostgreSQL |
+| Analysis provider | Deterministic mock provider |
+
+Production traffic flows from the Vercel-hosted Next.js frontend to the
+Vercel-hosted FastAPI API, which persists applications and analyses in Neon
+PostgreSQL.
+
 ## Screenshots
 
 ### Application Dashboard
@@ -8,17 +45,6 @@
 
 ![Resume match analysis](docs/screenshots/analysis-detail-1.png)
 ![Resume match analysis](docs/screenshots/analysis-detail-2.png)
-
-
-# AI Job Application Tracker & Resume Match Agent
-
-A full-stack internship application tracker that stores job applications,
-analyzes job descriptions against resume projects, and generates structured
-resume-match results.
-
-The project combines a Next.js frontend, FastAPI backend, PostgreSQL database,
-provider-based analysis architecture, OpenAI-ready structured output support,
-Docker Compose development, and GitHub Actions CI.
 
 ## Project Highlights
 
@@ -528,6 +554,8 @@ Workflow file:
 - The OpenAI provider requires manual environment configuration
 - Re-running analysis creates an additional database record
 - End-to-end tests currently focus on stable frontend smoke coverage rather than the full analysis workflow
+- The public deployment has no authentication or per-user data isolation
+- Application records in the deployed demo are stored in a shared database
 
 ---
 

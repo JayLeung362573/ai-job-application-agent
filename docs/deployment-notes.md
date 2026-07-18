@@ -1,8 +1,23 @@
 # Deployment Notes
 
-This project is currently optimized for local Docker Compose development, but
-the backend, frontend, database, and analysis provider configuration are already
-separated in a way that can be adapted for deployment.
+This project supports both local Docker Compose development and a deployed
+production-style environment. The frontend and backend are deployed as separate
+Vercel projects, while PostgreSQL persistence is provided by Neon.
+
+## Deployed Environment
+
+| Component | Deployment |
+| :--- | :--- |
+| Frontend | `https://ai-job-application-tracker-alpha.vercel.app` |
+| Backend | `https://ai-job-application-agent-api.vercel.app` |
+| API documentation | `https://ai-job-application-agent-api.vercel.app/docs` |
+| Database | Neon PostgreSQL |
+
+The deployed backend uses a pooled Neon connection for application requests and
+a direct connection for Alembic migrations.
+
+The public demo currently uses `ANALYSIS_PROVIDER=mock`, so it does not require
+an OpenAI API key or incur OpenAI API usage.
 
 ## Services
 
