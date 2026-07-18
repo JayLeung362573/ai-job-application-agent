@@ -13,7 +13,11 @@ from app.schemas.application import (
     ApplicationUpdate,
 )
 
-from app.api.dependencies import get_analysis_service
+from app.api.dependencies import (
+    get_analysis_service,
+    require_analysis_access_token,
+)
+
 from app.schemas.analysis import AnalysisRead
 from app.services.analysis import (
     AnalysisNotFoundError,
@@ -94,6 +98,7 @@ def list_applications(
     "/{application_id}/analyze",
     response_model=AnalysisRead,
     status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_analysis_access_token)],
 )
 
 def analyze_application(
