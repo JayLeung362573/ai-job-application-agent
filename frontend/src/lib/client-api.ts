@@ -5,9 +5,12 @@ import type {
 } from "@/types/application";
 
 import type { Analysis } from "@/types/analysis";
+import { resolveApiUrl } from "@/lib/api-url";
 
-const PUBLIC_API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const PUBLIC_API_URL = resolveApiUrl(
+  process.env.NEXT_PUBLIC_API_URL,
+  "NEXT_PUBLIC_API_URL",
+);
 
 interface ApiValidationError {
   loc?: Array<string | number>;

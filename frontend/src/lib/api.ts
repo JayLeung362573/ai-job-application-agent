@@ -4,8 +4,12 @@ import type {
 } from "@/types/application";
 
 import type { Analysis } from "@/types/analysis";
+import { resolveApiUrl } from "@/lib/api-url";
 
-const API_URL = process.env.API_URL ?? "http://localhost:8000";
+const API_URL = resolveApiUrl(
+  process.env.API_URL,
+  "API_URL",
+);
 
 export interface ApplicationFilters {
   q?: string;
