@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     database_url: str = (
         "postgresql+psycopg://jobagent:jobagent@localhost:5432/jobagent"
     )
+    database_url_unpooled: str | None = None
     analysis_provider: AnalysisProviderName = "mock"
     openai_model: str = "gpt-5.5"
     openai_api_key: str | None = None
@@ -24,12 +25,42 @@ class Settings(BaseSettings):
             for origin in self.cors_origins.split(",")
             if origin.strip()
         ]
+    
+    @property
+    def migration_database_url(self) -> str:
+        return self.database_url_unpooled or self.database_url
 
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
         extra="ignore",
     )
+
+    @field_validator(
+        "database_url",
+        "database_url_unpooled",
+        mode="before",
+    )
+    @classmethod
+    def normalize_postgresql_driver(cls, value: object) -> object:
+        if not isinstance(value, str):
+            return value
+
+        if value.startswith("postgres://"):
+            return value.replace(
+                "postgres://",
+                "postgresql+psycopg://",
+                1,
+            )
+
+        if value.startswith("postgresql://"):
+            return value.replace(
+                "postgresql://",
+                "postgresql+psycopg://",
+                1,
+            )
+
+        return value
 
     @field_validator("openai_api_key", mode="before")
     @classmethod
