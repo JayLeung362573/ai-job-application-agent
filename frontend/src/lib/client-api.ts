@@ -124,6 +124,7 @@ export async function deleteApplication(
 
 export async function runApplicationAnalysis(
   applicationId: string,
+  accessToken: string,
 ): Promise<Analysis> {
   const response = await fetch(
     `${PUBLIC_API_URL}/applications/${encodeURIComponent(applicationId)}/analyze`,
@@ -131,9 +132,14 @@ export async function runApplicationAnalysis(
       method: "POST",
       headers: {
         Accept: "application/json",
+        "X-Analysis-Access-Token": accessToken,
       },
     },
   );
+
+  if (response.status === 401) {
+    throw new Error("Invalid analysis access password.");
+  }
 
   if (!response.ok) {
     const message = await getApiErrorMessage(
