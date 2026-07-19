@@ -24,8 +24,9 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://jobagent:jobagent@postgres:5432/jobagent
       ANALYSIS_PROVIDER: ${ANALYSIS_PROVIDER:-mock}
-      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5.5}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5.6-luna}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANALYSIS_ACCESS_TOKEN: ${ANALYSIS_ACCESS_TOKEN:-}
     depends_on:
       postgres:
         condition: service_healthy

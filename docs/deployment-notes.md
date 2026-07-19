@@ -76,7 +76,7 @@ To enable the OpenAI-backed provider in a deployed environment:
 
 ```env
 ANALYSIS_PROVIDER=openai
-OPENAI_MODEL=gpt-5.5
+OPENAI_MODEL=gpt-5.6-luna
 OPENAI_API_KEY=your_secret_key
 ```
 

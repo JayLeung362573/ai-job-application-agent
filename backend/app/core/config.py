@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     )
     database_url_unpooled: str | None = None
     analysis_provider: AnalysisProviderName = "mock"
-    openai_model: str = "gpt-5.5"
+    openai_model: str = "gpt-5.6-luna"
     openai_api_key: str | None = None
     analysis_access_token: str | None = None
     cors_origins: str = "http://localhost:3000"

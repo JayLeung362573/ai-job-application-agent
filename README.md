@@ -170,7 +170,7 @@ or
 
 ```
 ANALYSIS_PROVIDER=openai
-OPENAI_MODEL=gpt-5.5
+OPENAI_MODEL=gpt-5.6-luna
 OPENAI_API_KEY=your_secret_key
 ```
 
@@ -184,7 +184,7 @@ The analysis provider is selected through environment variables.
 | Variable | Default | Description |
 | :--- | :--- | :--- |
 | `ANALYSIS_PROVIDER` | `mock` | Selects `mock` or `openai` |
-| `OPENAI_MODEL` | `gpt-5.5` | Model name passed to the OpenAI provider |
+| `OPENAI_MODEL` | `gpt-5.6-luna` | Model name passed to the OpenAI provider |
 | `OPENAI_API_KEY` | empty | API key used only when `ANALYSIS_PROVIDER=openai` |
 
 The default provider is `mock`, so the application works locally, in tests, and

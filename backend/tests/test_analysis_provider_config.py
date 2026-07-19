@@ -25,7 +25,7 @@ def test_settings_default_to_mock_provider(monkeypatch) -> None:
     settings = get_settings()
 
     assert settings.analysis_provider == "mock"
-    assert settings.openai_model == "gpt-5.5"
+    assert settings.openai_model == "gpt-5.6-luna"
     assert settings.openai_api_key is None
 
 

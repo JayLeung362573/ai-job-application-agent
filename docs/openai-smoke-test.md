@@ -50,7 +50,7 @@ Edit `.env` locally:
 
 ```env
 ANALYSIS_PROVIDER=openai
-OPENAI_MODEL=gpt-5.5
+OPENAI_MODEL=gpt-5.6-luna
 OPENAI_API_KEY=replace_with_your_real_key
 ```
 
@@ -83,7 +83,7 @@ Expected output:
 ```text
 OpenAIAnalysisProvider
 True
-gpt-5.5
+gpt-5.6-luna
 ```
 
 ## 4. Create or find an application
@@ -227,7 +227,7 @@ After the smoke test, edit `.env`:
 
 ```env
 ANALYSIS_PROVIDER=mock
-OPENAI_MODEL=gpt-5.5
+OPENAI_MODEL=gpt-5.6-luna
 OPENAI_API_KEY=
 ```
 

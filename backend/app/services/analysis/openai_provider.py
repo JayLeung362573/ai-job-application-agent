@@ -45,7 +45,7 @@ Rules:
         self,
         *,
         client: Any | None = None,
-        model: str = "gpt-5.5",
+        model: str = "gpt-5.6-luna",
         api_key: str | None = None,
     ) -> None:
         client_kwargs: dict[str, str] = {}
