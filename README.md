@@ -14,8 +14,9 @@ Docker Compose development, and GitHub Actions CI.
 - [FastAPI Documentation](https://ai-job-application-agent-api.vercel.app/docs)
 - [Backend Health Check](https://ai-job-application-agent-api.vercel.app/health)
 
-The public deployment uses the deterministic mock analysis provider and does not
-make paid OpenAI API requests.
+The production deployment uses the OpenAI-backed analysis provider with
+`gpt-5.6-luna`. Running an analysis requires a private access password, while
+the OpenAI API key remains server-side.
 
 > [!WARNING]
 > The public demo does not currently include authentication or per-user data
@@ -29,7 +30,7 @@ make paid OpenAI API requests.
 | Frontend | Vercel, Next.js |
 | Backend | Vercel Python Functions, FastAPI |
 | Database | Neon PostgreSQL |
-| Analysis provider | Deterministic mock provider |
+| Analysis provider | OpenAI Responses API with `gpt-5.6-luna` |
 
 Production traffic flows from the Vercel-hosted Next.js frontend to the
 Vercel-hosted FastAPI API, which persists applications and analyses in Neon
@@ -107,8 +108,8 @@ PostgreSQL.
 - Display the latest saved analysis in the frontend
 - Show match scores, skill gaps, matched projects, resume suggestions, and interview questions
 
-The current implementation uses a deterministic mock provider. It does not
-require API credentials or make external AI requests.
+Production uses the protected OpenAI provider. Local development, automated
+tests, and CI continue to use the deterministic mock provider by default.
 
 ---
 
@@ -172,6 +173,7 @@ or
 ANALYSIS_PROVIDER=openai
 OPENAI_MODEL=gpt-5.6-luna
 OPENAI_API_KEY=your_secret_key
+ANALYSIS_ACCESS_TOKEN=your_private_access_password
 ```
 
 The OpenAI provider is intentionally kept behind configuration so API keys are
@@ -186,6 +188,7 @@ The analysis provider is selected through environment variables.
 | `ANALYSIS_PROVIDER` | `mock` | Selects `mock` or `openai` |
 | `OPENAI_MODEL` | `gpt-5.6-luna` | Model name passed to the OpenAI provider |
 | `OPENAI_API_KEY` | empty | API key used only when `ANALYSIS_PROVIDER=openai` |
+| `ANALYSIS_ACCESS_TOKEN` | empty | Private password required by OpenAI analysis requests |
 
 The default provider is `mock`, so the application works locally, in tests, and
 in CI without API credentials. Selecting `openai` requires a server-side
@@ -416,7 +419,8 @@ Example:
 
 ```bash
 curl -X POST \
-  http://localhost:8000/applications/{application_id}/analyze
+  http://localhost:8000/applications/{application_id}/analyze \
+  -H "X-Analysis-Access-Token: your_private_access_password"
 ```
 
 Retrieve the most recently created analysis:
@@ -550,8 +554,8 @@ Workflow file:
 
 ## Current Limitations
 
-- The default runtime provider is the deterministic mock provider
-- The OpenAI provider requires manual environment configuration
+- Production OpenAI analysis uses a shared access password, not full user authentication
+- The OpenAI API has usage-based costs each time an analysis is generated
 - Re-running analysis creates an additional database record
 - End-to-end tests currently focus on stable frontend smoke coverage rather than the full analysis workflow
 - The public deployment has no authentication or per-user data isolation

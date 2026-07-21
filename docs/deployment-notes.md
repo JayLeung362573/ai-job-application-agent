@@ -12,6 +12,7 @@ Vercel projects, while PostgreSQL persistence is provided by Neon.
 | Backend | `https://ai-job-application-agent-api.vercel.app` |
 | API documentation | `https://ai-job-application-agent-api.vercel.app/docs` |
 | Database | Neon PostgreSQL |
+| `ANALYSIS_ACCESS_TOKEN` | Backend | Yes | Private password required to run OpenAI analysis |
 
 The deployed backend uses a pooled Neon connection for application requests and
 a direct connection for Alembic migrations.
@@ -57,6 +58,7 @@ manager or environment variable system:
 
 - `DATABASE_URL`
 - `OPENAI_API_KEY`
+- `ANALYSIS_ACCESS_TOKEN`
 
 Never expose secrets through variables prefixed with `NEXT_PUBLIC_`, because
 those values are intended for browser-visible frontend configuration.
@@ -69,8 +71,9 @@ The safe default provider is:
 ANALYSIS_PROVIDER=mock
 ```
 
-This keeps the application usable without external credentials and makes local
-testing deterministic.
+The production backend uses `ANALYSIS_PROVIDER=openai` with `gpt-5.6-luna`.
+Analysis requests require a private `ANALYSIS_ACCESS_TOKEN`; the OpenAI API key
+is stored only in the backend Vercel project's environment variables.
 
 To enable the OpenAI-backed provider in a deployed environment:
 
@@ -78,6 +81,7 @@ To enable the OpenAI-backed provider in a deployed environment:
 ANALYSIS_PROVIDER=openai
 OPENAI_MODEL=gpt-5.6-luna
 OPENAI_API_KEY=your_secret_key
+ANALYSIS_ACCESS_TOKEN=your_private_access_password
 ```
 
 If `ANALYSIS_PROVIDER=openai` is selected without an API key, the backend should
@@ -187,6 +191,10 @@ Before deployment:
 - [ ] Confirm `/health/db` returns 200
 - [ ] Run backend tests
 - [ ] Run frontend lint and build checks
+- [ ] Set `ANALYSIS_ACCESS_TOKEN` as a backend-only secret
+- [ ] Verify an incorrect analysis password returns HTTP 401
+- [ ] Verify a correct password creates an OpenAI analysis
+- [ ] Confirm usage appears in the OpenAI Usage dashboard
 
 ## Recommended Verification Commands
 

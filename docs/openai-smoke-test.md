@@ -52,6 +52,7 @@ Edit `.env` locally:
 ANALYSIS_PROVIDER=openai
 OPENAI_MODEL=gpt-5.6-luna
 OPENAI_API_KEY=replace_with_your_real_key
+ANALYSIS_ACCESS_TOKEN=replace_with_your_private_password
 ```
 
 The `.env` file is local-only and must not be committed.
@@ -111,7 +112,8 @@ Copy the returned `id`.
 
 ```bash
 curl -i -X POST \
-  http://localhost:8000/applications/PASTE_APPLICATION_ID_HERE/analyze
+  http://localhost:8000/applications/PASTE_APPLICATION_ID_HERE/analyze \
+  -H "X-Analysis-Access-Token: replace_with_your_private_password"
 ```
 
 Expected result:
@@ -229,6 +231,7 @@ After the smoke test, edit `.env`:
 ANALYSIS_PROVIDER=mock
 OPENAI_MODEL=gpt-5.6-luna
 OPENAI_API_KEY=
+ANALYSIS_ACCESS_TOKEN=
 ```
 
 Restart:
